@@ -42,10 +42,12 @@ app.get('/', (req, res) => {
     .catch(error => console.error(error)) // 錯誤處理
 })
 
+// New 頁面路由
 app.get('/todos/new', (req, res) => {
   return res.render('new')
 })
 
+// Create 路由，新增一筆 To-do
 app.post('/todos', (req, res) => {
   const name = req.body.name // 從 req.body 拿出表單裡的 name 資料
 
@@ -54,11 +56,34 @@ app.post('/todos', (req, res) => {
     .catch(error => console.log(error))
 })
 
+// Read 路由，瀏覽特定 To-do
 app.get('/todos/:id', (req, res) => {
   const id = req.params.id
   return Todo.findById(id)
     .lean()
     .then((todo) => res.render('detail', { todo }))
+    .catch(error => console.log(error))
+})
+
+// Edit 頁面路由
+app.get('/todos/:id/edit', (req, res) => {
+  const id = req.params.id
+  return Todo.findById(id)
+    .lean()
+    .then((todo) => res.render('edit', { todo }))
+    .catch(error => console.log(error))
+})
+
+// Update 路由，接住修改頁面表單資料，修改特定 To-do
+app.post('/todos/:id/edit', (req, res) => {
+  const id = req.params.id
+  const name = req.body.name
+  return Todo.findById(id)
+    .then(todo => {
+      todo.name = name
+      return todo.save()
+    })
+    .then(() => res.redirect(`/todos/${id}`))
     .catch(error => console.log(error))
 })
 
