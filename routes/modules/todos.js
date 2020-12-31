@@ -6,7 +6,7 @@ const router = express.Router()
 const Todo = require('../../models/todo')
 
 // New 頁面路由
-router.get('/todos/new', (req, res) => {
+router.get('/new', (req, res) => {
   return res.render('new')
 })
 
