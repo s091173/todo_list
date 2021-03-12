@@ -1,5 +1,7 @@
 // 載入 express 並建構應用程式伺服器
 const express = require('express')
+// 載入 express session
+const session = require('express-session')
 // 載入 handlebars
 const exphbs = require('express-handlebars')
 // 引用 body-parser
@@ -20,6 +22,13 @@ const PORT = process.env.PORT || 3000
 // setting template engine
 app.engine('hbs', exphbs({ defaultLayout: 'main', extname: '.hbs' }))
 app.set('view engine', 'hbs')
+
+// session 相關設定
+app.use(session({
+  secret: 'ThisIsMySecret',
+  resave: false,
+  saveUninitialized: true
+}))
 
 // 用 app.use 規定每一筆請求都需要透過 body-parser 進行前置處理
 app.use(bodyParser.urlencoded({ extended: true }))
