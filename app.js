@@ -11,6 +11,10 @@ const methodOverride = require('method-override')
 // 引用 flash 套件
 const flash = require('connect-flash')
 
+if (process.env.NODE_ENV !== 'production') {
+  require('dotenv').config()
+}
+
 // 引用路由器
 const routes = require('./routes')
 
@@ -22,8 +26,8 @@ require('./config/mongoose')
 
 const app = express()
 // 如果在 Heroku 環境則使用 process.env.PORT 
-// 本地環境，使用 3000
-const PORT = process.env.PORT || 3000
+// 本地環境，使用 3000 (放入環境變數中)
+const PORT = process.env.PORT
 
 // setting template engine
 app.engine('hbs', exphbs({ defaultLayout: 'main', extname: '.hbs' }))
@@ -31,7 +35,7 @@ app.set('view engine', 'hbs')
 
 // session 相關設定
 app.use(session({
-  secret: 'ThisIsMySecret',
+  secret: process.env.SESSION_SECRET,
   resave: false,
   saveUninitialized: true
 }))
