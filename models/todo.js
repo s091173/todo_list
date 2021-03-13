@@ -9,6 +9,12 @@ const todoSchema = new Schema({
   isDone: {
     type: Boolean,
     default: false
+  },
+  userId: {  // 加入 User 關聯設定
+    type: Schema.Types.ObjectId, // 連向另一個資料物件 ObjectId
+    ref: 'User', // 參考對象為 User Model
+    index: true,
+    required: true
   }
 })
 module.exports = mongoose.model('Todo', todoSchema)

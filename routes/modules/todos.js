@@ -12,51 +12,56 @@ router.get('/new', (req, res) => {
 
 // Create 路由，新增一筆 To-do
 router.post('/', (req, res) => {
+  const userId = req.user._id
   const name = req.body.name // 從 req.body 拿出表單裡的 name 資料
-
-  return Todo.create({ name }) // 存入資料庫
+  return Todo.create({ name, userId }) // 存入資料庫
     .then(() => res.redirect('/')) // 新增完成後導回首頁
     .catch(error => console.log(error))
 })
 
 // Read 路由，瀏覽特定 To-do
 router.get('/:id', (req, res) => {
-  const id = req.params.id
-  return Todo.findById(id)
+  const userId = req.user._id
+  const _id = req.params.id
+  return Todo.findOne({ _id, userId })
     .lean()
-    .then((todo) => res.render('detail', { todo }))
+    .then(todo => res.render('detail', { todo }))
     .catch(error => console.log(error))
 })
 
 // Edit 頁面路由
 router.get('/:id/edit', (req, res) => {
-  const id = req.params.id
-  return Todo.findById(id)
+  const userId = req.user._id
+  const _id = req.params.id
+  return Todo.findOne({ _id, userId })
     .lean()
-    .then((todo) => res.render('edit', { todo }))
+    .then(todo => res.render('edit', { todo }))
     .catch(error => console.log(error))
 })
 
 // Update 路由，接住修改頁面表單資料，修改特定 To-do
 router.put('/:id', (req, res) => {
-  const id = req.params.id
+  const userId = req.user._id
+  const _id = req.params.id
   const { name, isDone } = req.body
-  return Todo.findById(id)
+  return Todo.findOne({ _id, userId })
     .then(todo => {
       todo.name = name
       todo.isDone = isDone === 'on'
       return todo.save()
     })
-    .then(() => res.redirect(`/todos/${id}`))
+    .then(() => res.redirect(`/todos/${_id}`))
     .catch(error => console.log(error))
 })
 
 // Delete 路由，刪除特定 To-do
 router.delete('/:id', (req, res) => {
-  const id = req.params.id
-  return Todo.findById(id)
+  const userId = req.user._id
+  const _id = req.params.id
+  return Todo.findOne({ _id, userId })
     .then(todo => todo.remove())
     .then(() => res.redirect('/'))
     .catch(error => console.log(error))
 })
+
 module.exports = router
