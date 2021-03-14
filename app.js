@@ -11,6 +11,7 @@ const methodOverride = require('method-override')
 // 引用 flash 套件
 const flash = require('connect-flash')
 
+// 分辨應用程式執行模式（development 或是 production mode）
 if (process.env.NODE_ENV !== 'production') {
   require('dotenv').config()
 }
